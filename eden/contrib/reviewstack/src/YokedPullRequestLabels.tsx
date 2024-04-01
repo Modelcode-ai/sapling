@@ -81,7 +81,7 @@ export default function PullRequestLabels(): React.ReactElement {
     [pullRequestLabels, setPullRequestLabels],
   );
 
-  const label = viewerDidAuthor && (
+  const label = viewerDidAuthor ? (
     <ActionMenu>
       <ActionMenu.Anchor>
         <button className="pr-label-button">
@@ -92,31 +92,40 @@ export default function PullRequestLabels(): React.ReactElement {
         <YokedRepoLabelsInput existingLabelIDs={existingLabelIDs} onSelect={updateLabels} />
       </ActionMenu.Overlay>
     </ActionMenu>
+  ) : (
+    <span className="pr-label-span">
+      <StyledOcticon icon={TagIcon} />
+    </span>
   );
 
   return (
-    <Box display="flex" alignItems="center" gridGap={2} paddingLeft={3}>
-      {label}
-      <Box display="flex" gridGap={1}>
-        {pullRequestLabels.map(({id, name, color}) => (
-          <IssueLabelToken
-            style={{
-              color: '#57606a',
-              background: 'none',
-              borderColor: 'rgba(27,31,36,0.15)',
-            }}
-            key={id}
-            text={name}
-            fillColor={`rgba(234,238,242,0.5)`}
-            size="large"
-            onRemove={!viewerDidAuthor ? undefined : () => updateLabels({id, name, color}, true)}
-            hideRemoveButton={!viewerDidAuthor}
-          />
-        ))}
-      </Box>
-    </Box>
+    <>
+      {(viewerDidAuthor || pullRequestLabels.length > 0) && (
+        <Box display="flex" alignItems="center" gridGap={2} paddingLeft={3}>
+          {label}
+          <Box display="flex" gridGap={1}>
+            {pullRequestLabels.map(({id, name, color}) => (
+              <IssueLabelToken
+                style={{
+                  color: '#57606a',
+                  background: 'none',
+                  borderColor: 'rgba(27,31,36,0.15)',
+                }}
+                key={id}
+                text={name}
+                fillColor={`rgba(234,238,242,0.5)`}
+                size="large"
+                onRemove={
+                  !viewerDidAuthor ? undefined : () => updateLabels({id, name, color}, true)
+                }
+                hideRemoveButton={!viewerDidAuthor}
+              />
+            ))}
+          </Box>
+        </Box>
+      )}
+    </>
   );
-
   return (
     <>
       {pullRequestLabels.map(({id, name, color}) => (
