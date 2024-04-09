@@ -9,8 +9,16 @@ import type {PullRequestReviewDecision} from './generated/graphql';
 
 import {PullRequestState} from './generated/graphql';
 import {pullRequestReviewDecisionLabel} from './utils';
-import {StateLabel, Token, Link, StyledOcticon, CircleOcticon} from '@primer/react';
-import {GitPullRequestIcon, GitMergeIcon, GitPullRequestClosedIcon} from '@primer/octicons-react';
+import {ActionMenu, ActionList, StateLabel, Token, StyledOcticon} from '@primer/react';
+import {
+  GitPullRequestIcon,
+  GitMergeIcon,
+  GitPullRequestClosedIcon,
+  LinkExternalIcon,
+} from '@primer/octicons-react';
+import {useRecoilCallback, useRecoilValue} from 'recoil';
+import {gitHubClient, gitHubPullRequest, gitHubPullRequestViewerDidAuthor} from './recoil';
+import useRefreshPullRequest from './useRefreshPullRequest';
 
 type Status = 'pullClosed' | 'pullMerged' | 'pullOpened';
 
@@ -19,11 +27,13 @@ export default function PullRequestStateLabel({
   state,
   variant = 'small',
   plaintext = false,
+  url,
 }: {
   reviewDecision: PullRequestReviewDecision | null;
   state: PullRequestState;
   variant?: 'small' | 'normal';
   plaintext?: boolean | undefined;
+  url: string;
 }) {
   const {status, label, color} = statusAndLabel(state, reviewDecision);
   const tagIcon = {
@@ -31,37 +41,83 @@ export default function PullRequestStateLabel({
     [PullRequestState.Merged]: GitMergeIcon,
     [PullRequestState.Open]: GitPullRequestIcon,
   }[state];
+  const refreshPullRequest = useRefreshPullRequest();
+  const viewerDidAuthor = useRecoilValue(gitHubPullRequestViewerDidAuthor);
   if (plaintext) {
-    // return <>{label}</>;
     return (
       <>
         <StyledOcticon icon={tagIcon} size={12} /> {label}
       </>
     );
   }
-  return (
-    <Token
-      size="large"
-      text={label}
-      title={`Pull request is ${label}`}
-      leadingVisual={() => <StyledOcticon icon={tagIcon} size={16} sx={{marginLeft: '0'}} />}
-      sx={{
-        color: '#fff',
-        backgroundColor: color,
-        borderColor: color,
-        cursor: 'pointer',
-        paddingLeft: '8px',
-        paddingRight: '8px',
-      }}
-    />
+
+  const mergePullRequest = useRecoilCallback<[], Promise<void>>(
+    ({snapshot}) =>
+      async () => {
+        const clientLoadable = snapshot.getLoadable(gitHubClient);
+        if (clientLoadable.state !== 'hasValue' || clientLoadable.contents == null) {
+          return Promise.reject('client not found');
+        }
+        const client = clientLoadable.contents;
+
+        const pullRequestId = snapshot.getLoadable(gitHubPullRequest).valueMaybe()?.id;
+        if (pullRequestId == null) {
+          return Promise.reject('pull request not found');
+        }
+
+        await client.mergePullRequest({
+          pullRequestId,
+        });
+
+        refreshPullRequest();
+      },
+    [refreshPullRequest],
   );
+
   return (
-    <StateLabel
-      status={status}
-      variant={variant}
-      sx={{backgroundColor: color, paddingLeft: '8px', paddingRight: '10px'}}>
-      {label}
-    </StateLabel>
+    <ActionMenu>
+      <ActionMenu.Anchor>
+        <Token
+          size="large"
+          text={label}
+          title={`Pull request is ${label.toLowerCase()}.`}
+          leadingVisual={() => <StyledOcticon icon={tagIcon} size={16} sx={{marginLeft: '0'}} />}
+          sx={{
+            color: '#fff',
+            backgroundColor: color,
+            borderColor: color,
+            cursor: 'pointer',
+            paddingLeft: '8px',
+            paddingRight: '8px',
+            userSelect: 'none',
+            ':hover': {
+              color: '#fff',
+              backgroundColor: color,
+              boxShadow: 'none',
+            },
+          }}
+        />
+      </ActionMenu.Anchor>
+      <ActionMenu.Overlay width="small">
+        <ActionList selectionVariant="single">
+          {state === PullRequestState.Open && viewerDidAuthor ? (
+            <ActionList.Item onClick={mergePullRequest}>
+              <ActionList.LeadingVisual>
+                <StyledOcticon icon={GitMergeIcon} size={16} sx={{marginLeft: '0'}} />
+              </ActionList.LeadingVisual>
+              Merge pull request
+            </ActionList.Item>
+          ) : (
+            <ActionList.LinkItem href={url}>
+              <ActionList.LeadingVisual>
+                <StyledOcticon icon={LinkExternalIcon} size={16} sx={{marginLeft: '0'}} />
+              </ActionList.LeadingVisual>
+              View on GitHub
+            </ActionList.LinkItem>
+          )}
+        </ActionList>
+      </ActionMenu.Overlay>
+    </ActionMenu>
   );
 }
 

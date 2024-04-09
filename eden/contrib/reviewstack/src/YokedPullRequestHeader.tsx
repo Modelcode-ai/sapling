@@ -48,7 +48,6 @@ export default function PullRequestHeader({
       ref={prHeaderElement}
       // ref={prHeaderRef}
     >
-      <YokedPullRequestMerge />
       <Box className="pr-info">
         <TrustedRenderedMarkdown trustedHTML={titleHTML} inline={true} className="pr-title" />{' '}
         <Link className="pr-number" href={url} target="_blank">
@@ -57,7 +56,11 @@ export default function PullRequestHeader({
       </Box>
       <Box display="flex" alignItems="center" justifyContent={'space-between'}>
         <Box display="flex" gridGap={2}>
-          <YokedPullRequestStateLabel reviewDecision={reviewDecision ?? null} state={state} />
+          <YokedPullRequestStateLabel
+            reviewDecision={reviewDecision ?? null}
+            state={state}
+            url={url}
+          />
           <YokedPullRequestSignals />
         </Box>
         <Box display="flex" gridGap={2}>

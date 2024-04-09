@@ -9,7 +9,7 @@ import type {StackPullRequestFragment} from './generated/graphql';
 
 import {useCommand} from './KeyboardShortcuts';
 import YokedPullRequestStackItem from './YokedPullRequestStackItem';
-import {gitHubPullRequestID} from './recoil';
+import {gitHubPullRequestID, gitHubPullRequest, gitHubPullRequestURL} from './recoil';
 import {stackedPullRequestFragments} from './stackState';
 import useNavigateToPullRequest from './useNavigateToPullRequest';
 import {ArrowDownIcon, ArrowUpIcon} from '@primer/octicons-react';
@@ -48,6 +48,7 @@ export default function PullRequestStack(): React.ReactElement | null {
 
   const stack = availableStack ?? lastStack;
   const index = stack != null ? stack.findIndex(({number}) => number === pullRequestNumber) : -1;
+  const pullRequestURL = useRecoilValue(gitHubPullRequestURL) || '';
 
   const onNavigate = useCallback(
     (index: number) => {
@@ -110,6 +111,7 @@ export default function PullRequestStack(): React.ReactElement | null {
           key={pullRequest.number}
           isSelected={index === stackIndex}
           stackIndex={stackIndex}
+          url={pullRequestURL}
           {...pullRequest}
         />
       ))}
