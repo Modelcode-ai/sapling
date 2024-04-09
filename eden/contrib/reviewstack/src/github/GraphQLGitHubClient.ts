@@ -43,6 +43,9 @@ import type {
   TreeQueryData,
   TreeQueryVariables,
   UserFragment,
+  MergePullRequestInput,
+  MergePullRequestMutationData,
+  MergePullRequestMutationVariables,
 } from '../generated/graphql';
 import type GitHubClient from './GitHubClient';
 import type {PullRequest} from './pullRequestTimelineTypes';
@@ -65,6 +68,7 @@ import {
   StackPullRequestQuery,
   SubmitPullRequestReviewMutation,
   TreeQuery,
+  MergePullRequestMutation,
 } from '../generated/graphql';
 import {globalCacheStats} from './GitHubClientStats';
 import {createGraphQLEndpointForHostname} from './gitHubCredentials';
@@ -403,6 +407,13 @@ export default class GraphQLGitHubClient implements GitHubClient {
       SubmitPullRequestReviewMutationData,
       SubmitPullRequestReviewMutationVariables
     >(SubmitPullRequestReviewMutation, {input});
+  }
+
+  async mergePullRequest(input: MergePullRequestInput): Promise<MergePullRequestMutationData> {
+    return this.query<MergePullRequestMutationData, MergePullRequestMutationVariables>(
+      MergePullRequestMutation,
+      {input},
+    );
   }
 
   private query<TData, TVariables>(query: string, variables: TVariables): Promise<TData> {
