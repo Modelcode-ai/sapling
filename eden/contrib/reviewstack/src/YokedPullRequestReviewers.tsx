@@ -109,7 +109,7 @@ export default function PullRequestReviewers(): React.ReactElement {
     [pullRequestReviewers, refreshPullRequest, setPullRequestReviewers],
   );
 
-  const label = viewerDidAuthor && (
+  const label = viewerDidAuthor ? (
     <ActionMenu>
       <ActionMenu.Anchor>
         <button className="pr-label-button">
@@ -123,29 +123,37 @@ export default function PullRequestReviewers(): React.ReactElement {
         />
       </ActionMenu.Overlay>
     </ActionMenu>
+  ) : (
+    <span className="pr-label-span">
+      <StyledOcticon icon={PeopleIcon} size={'small'} />
+    </span>
   );
 
   return (
-    <Box display="flex" alignItems="center" gridGap={2} paddingLeft={3}>
-      {label}
-      <Box display="flex" flexWrap="wrap" gridGap={1}>
-        {pullRequestReviewers.reviewers.map(user => (
-          <IssueLabelToken
-            style={{
-              color: '#57606a',
-              background: 'none',
-              borderColor: 'rgba(27,31,36,0.15)',
-            }}
-            key={user.id}
-            text={user.login}
-            fillColor={`rgba(234,238,242,0.5)`}
-            size="large"
-            onRemove={!viewerDidAuthor ? undefined : () => updateReviewers(user, true)}
-            hideRemoveButton={!viewerDidAuthor}
-          />
-        ))}
-      </Box>
-    </Box>
+    <>
+      {(viewerDidAuthor || pullRequestReviewers.reviewers.length > 0) && (
+        <Box display="flex" alignItems="center" gridGap={2} paddingLeft={3}>
+          {label}
+          <Box display="flex" flexWrap="wrap" gridGap={1}>
+            {pullRequestReviewers.reviewers.map(user => (
+              <IssueLabelToken
+                style={{
+                  color: '#57606a',
+                  background: 'none',
+                  borderColor: 'rgba(27,31,36,0.15)',
+                }}
+                key={user.id}
+                text={user.login}
+                fillColor={`rgba(234,238,242,0.5)`}
+                size="large"
+                onRemove={!viewerDidAuthor ? undefined : () => updateReviewers(user, true)}
+                hideRemoveButton={!viewerDidAuthor}
+              />
+            ))}
+          </Box>
+        </Box>
+      )}
+    </>
   );
 
   return (

@@ -53,11 +53,15 @@ export default function PullRequestHeader({
           <Text fontWeight="normal">{`#${number}`}</Text>
         </Link>
       </Box>
-      <Box display="flex" alignItems="center" gridGap={2}>
-        <YokedPullRequestStateLabel reviewDecision={reviewDecision ?? null} state={state} />
-        <YokedPullRequestSignals />
-        <YokedPullRequestReviewers />
-        <YokedPullRequestLabels />
+      <Box display="flex" alignItems="center" justifyContent={'space-between'}>
+        <Box display="flex" gridGap={2}>
+          <YokedPullRequestStateLabel reviewDecision={reviewDecision ?? null} state={state} />
+          <YokedPullRequestSignals />
+        </Box>
+        <Box display="flex" gridGap={2}>
+          <YokedPullRequestReviewers />
+          <YokedPullRequestLabels />
+        </Box>
 
         {/* NOTE(dk): No longer needed with Yoke sidebar */}
         {/* <PullRequestStack /> */}
