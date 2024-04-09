@@ -248,6 +248,10 @@ body {
   }
 }
 
+.pr-label-span {
+  line-height: 1;
+}
+
 .diff {
   .split-diff-view-file-header {
     background: none;

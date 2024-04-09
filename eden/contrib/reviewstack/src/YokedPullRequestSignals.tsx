@@ -65,7 +65,7 @@ export default function PullRequestSignals(): React.ReactElement | null {
   }
 
   return (
-    <Box marginRight={'auto'}>
+    <Box>
       <Link style={{lineHeight: '1'}} href={`${pullRequest.url}/checks`} target="_blank">
         {/* <Label variant={checkRuns.length === successful ? 'success' : 'danger'} size={'large'}>
           <>
