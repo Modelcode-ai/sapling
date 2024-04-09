@@ -10,6 +10,7 @@ import YokedPullRequestStateLabel from './YokedPullRequestStateLabel';
 import YokedPullRequestLabels from './YokedPullRequestLabels';
 import YokedPullRequestReviewers from './YokedPullRequestReviewers';
 import YokedPullRequestSignals from './YokedPullRequestSignals';
+import YokedPullRequestMerge from './YokedPullRequestMerge';
 import PullRequestVersions from './PullRequestVersions';
 import TrustedRenderedMarkdown from './TrustedRenderedMarkdown';
 import {gitHubPullRequest} from './recoil';
@@ -47,6 +48,7 @@ export default function PullRequestHeader({
       ref={prHeaderElement}
       // ref={prHeaderRef}
     >
+      <YokedPullRequestMerge />
       <Box className="pr-info">
         <TrustedRenderedMarkdown trustedHTML={titleHTML} inline={true} className="pr-title" />{' '}
         <Link className="pr-number" href={url} target="_blank">
