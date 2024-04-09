@@ -22,6 +22,8 @@ import type {
   SubmitPullRequestReviewInput,
   SubmitPullRequestReviewMutationData,
   UserFragment,
+  MergePullRequestInput,
+  MergePullRequestMutationData,
 } from '../generated/graphql';
 import type {PullRequest} from './pullRequestTimelineTypes';
 import type {PullsQueryInput, PullsWithPageInfo} from './pullsTypes';
@@ -100,4 +102,10 @@ export default interface GitHubClient {
   submitPullRequestReview(
     input: SubmitPullRequestReviewInput,
   ): Promise<SubmitPullRequestReviewMutationData>;
+
+  /**
+   * Merges a pull request.
+   * MergePullRequestMutation
+   */
+  mergePullRequest(input: MergePullRequestInput): Promise<MergePullRequestMutationData>;
 }

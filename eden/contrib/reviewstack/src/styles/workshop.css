@@ -269,6 +269,7 @@ body {
   padding: var(--xs);
   border-radius: var(--border-radius);
   box-shadow: inset 0 1px 0 rgb(0 0 0 / 3%), 0px 3px 5px rgb(0 0 0 / 8%);
+  overflow: hidden;
 }
 
 .drawers {

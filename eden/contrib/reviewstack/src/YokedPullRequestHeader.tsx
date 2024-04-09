@@ -10,6 +10,7 @@ import YokedPullRequestStateLabel from './YokedPullRequestStateLabel';
 import YokedPullRequestLabels from './YokedPullRequestLabels';
 import YokedPullRequestReviewers from './YokedPullRequestReviewers';
 import YokedPullRequestSignals from './YokedPullRequestSignals';
+import YokedPullRequestMerge from './YokedPullRequestMerge';
 import PullRequestVersions from './PullRequestVersions';
 import TrustedRenderedMarkdown from './TrustedRenderedMarkdown';
 import {gitHubPullRequest} from './recoil';
@@ -55,7 +56,11 @@ export default function PullRequestHeader({
       </Box>
       <Box display="flex" alignItems="center" justifyContent={'space-between'}>
         <Box display="flex" gridGap={2}>
-          <YokedPullRequestStateLabel reviewDecision={reviewDecision ?? null} state={state} />
+          <YokedPullRequestStateLabel
+            reviewDecision={reviewDecision ?? null}
+            state={state}
+            url={url}
+          />
           <YokedPullRequestSignals />
         </Box>
         <Box display="flex" gridGap={2}>

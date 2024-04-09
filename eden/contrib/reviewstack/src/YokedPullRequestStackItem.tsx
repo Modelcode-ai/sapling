@@ -31,6 +31,7 @@ function pad(num: number | string, size: number): string {
 type Props = {
   isSelected: boolean;
   stackIndex: number;
+  url: string;
 } & StackPullRequestFragment;
 
 // eslint-disable-next-line prefer-arrow-callback
@@ -43,6 +44,7 @@ export default React.memo(function PullRequestStackItem({
   state,
   title,
   updatedAt,
+  url,
 }: Props): React.ReactElement {
   const navigateToPullRequest = useNavigateToPullRequest();
 
@@ -59,6 +61,7 @@ export default React.memo(function PullRequestStackItem({
             plaintext={true}
             reviewDecision={reviewDecision ?? null}
             state={state}
+            url={url}
           />
           <span>{'\u30FB'}</span>
           <CalendarIcon size={12} />

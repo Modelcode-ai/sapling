@@ -11,6 +11,8 @@ import type {
   UserFragment,
   UserHomePageQueryData,
   UserHomePageQueryVariables,
+  MergePullRequestInput,
+  MergePullRequestMutationData,
 } from './generated/graphql';
 import type GitHubClient from './github/GitHubClient';
 import type {CommitChange, DiffCommitIDs, DiffWithCommitIDs} from './github/diffTypes';
@@ -1294,6 +1296,30 @@ export const gitHubPullRequestCheckRuns = selector<CheckRun[]>({
         return [];
       }
     });
+  },
+});
+
+export const mergePullRequestSelector = selectorFamily<
+  MergePullRequestMutationData,
+  MergePullRequestInput
+>({
+  key: 'mergePullRequestSelector',
+  get:
+    input =>
+    async ({get}) => {
+      const client = get(gitHubClient);
+      if (!client) {
+        throw new Error('GitHub client is not initialized');
+      }
+      return client.mergePullRequest(input);
+    },
+});
+
+export const gitHubPullRequestURL = selector<string | null>({
+  key: 'gitHubPullRequestURL',
+  get: ({get}) => {
+    const pullRequest = get(gitHubPullRequest);
+    return pullRequest?.url ?? null;
   },
 });
 

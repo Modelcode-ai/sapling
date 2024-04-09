@@ -22,6 +22,8 @@ import type {
   SubmitPullRequestReviewInput,
   SubmitPullRequestReviewMutationData,
   UserFragment,
+  MergePullRequestInput,
+  MergePullRequestMutationData,
 } from '../generated/graphql';
 import type GitHubClient from './GitHubClient';
 import type {PullRequest} from './pullRequestTimelineTypes';
@@ -104,6 +106,10 @@ export default class RejectingGitHubClient implements GitHubClient {
   submitPullRequestReview(
     _input: SubmitPullRequestReviewInput,
   ): Promise<SubmitPullRequestReviewMutationData> {
+    return Promise.reject('Method not implemented.');
+  }
+
+  mergePullRequest(_input: MergePullRequestInput): Promise<MergePullRequestMutationData> {
     return Promise.reject('Method not implemented.');
   }
 }
