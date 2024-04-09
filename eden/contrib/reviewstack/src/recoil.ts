@@ -1315,6 +1315,14 @@ export const mergePullRequestSelector = selectorFamily<
     },
 });
 
+export const gitHubPullRequestURL = selector<string | null>({
+  key: 'gitHubPullRequestURL',
+  get: ({get}) => {
+    const pullRequest = get(gitHubPullRequest);
+    return pullRequest?.url ?? null;
+  },
+});
+
 function createClient(
   db: IDBDatabase,
   token: string,
