@@ -108,7 +108,7 @@ export default function PullRequestStateLabel({
               Merge pull request
             </ActionList.Item>
           ) : (
-            <ActionList.LinkItem href={url}>
+            <ActionList.LinkItem href={url} target="_blank">
               <ActionList.LeadingVisual>
                 <StyledOcticon icon={LinkExternalIcon} size={16} sx={{marginLeft: '0'}} />
               </ActionList.LeadingVisual>
