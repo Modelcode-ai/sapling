@@ -31,7 +31,7 @@ export default function YokedPullRequestMerge() {
 
   return (
     <button onClick={mergePullRequest} disabled={!pullRequest}>
-      Merge Pull Request test
+      Merge pull request
     </button>
   );
 }
